@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>amis demo</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1"
+  />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+  <link rel="stylesheet" href="sdk.css" />
+  <link rel="stylesheet" href="helper.css" />
+  <link rel="stylesheet" href="iconfont.css" />
+  <!-- 这是默认主题所需的，如果是其他主题则不需要 -->
+  <!-- 从 1.1.0 开始 sdk.css 将不支持 IE 11，如果要支持 IE11 请引用这个 css，并把前面那个删了 -->
+  <!-- <link rel="stylesheet" href="sdk-ie11.css" /> -->
+  <!-- 不过 amis 开发团队几乎没测试过 IE 11 下的效果，所以可能有细节功能用不了，如果发现请报 issue -->
+  <style>
+    html,
+    body,
+    .app-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+<div id="root" class="app-wrapper"></div>
+<script src="sdk.js"></script>
+<script type="text/javascript">
+  (function () {
+    let amis = amisRequire('amis/embed');
+    // 通过替换下面这个配置来生成不同页面
+    let amisJSON = {
+      "type": "page",
+      "title": "主动申请付款导入导出Excel配置",
+      "body": [
+        {
+          "type": "form",
+          "mode": "horizontal",
+          "title": "",
+          "body": [
+            {
+              "type": "plain",
+              "tpl": "导出Excel去银行支付",
+              "inline": true,
+              "placeholder": "-",
+              "className": ""
+            },
+            {
+              "type": "button",
+              "label": "导出Excel清单",
+              "actionType": "dialog",
+              "dialog": {
+                "title": "系统提示",
+                "body": "对你点击了"
+              },
+              "block": false,
+              "className": "bg-primary m-l-lg"
+            },
+            {
+              "type": "divider"
+            },
+            {
+              "type": "input-text",
+              "label": "导出总列数",
+              "name": "exportTotal",
+              "mode": "horizontal"
+            },
+            {
+              "type": "table",
+              "columns": [
+                {
+                  "name": "importTitle",
+                  "label": "可选导出字段",
+                  "groupName": "要手续费的Excel导出规则",
+                  "inline": true,
+                  "tpl": "收方账号",
+                  "type": "text",
+                  "placeholder": "-",
+                  "popOver": false
+                },
+                {
+                  "name": "exportColumn",
+                  "label": "导出到Excel第几列",
+                  "groupName": "要手续费的Excel导出规则",
+                  "placeholder": "-",
+                  "quickEdit": {
+                    "mode": "popOver"
+                  },
+                  "type": "text"
+                },
+                {
+                  "name": "exportTitle",
+                  "label": "对应列的标题",
+                  "groupName": "要手续费的Excel导出规则",
+                  "placeholder": "-",
+                  "quickEdit": {
+                    "mode": "popOver"
+                  },
+                  "type": "text"
+                },
+                {
+                  "name": "exportColumnFee",
+                  "label": "导出到Excel第几列",
+                  "groupName": "不要手续费的Excel导出规则",
+                  "placeholder": "-",
+                  "quickEdit": {
+                    "mode": "popOver"
+                  },
+                  "type": "text"
+                },
+                {
+                  "name": "exportTitleFee",
+                  "label": "对应列的标题",
+                  "groupName": "不要手续费的Excel导出规则",
+                  "placeholder": "-",
+                  "quickEdit": {
+                    "mode": "popOver"
+                  },
+                  "type": "text"
+                }
+              ],
+              "columnsTogglable": "auto",
+              "affixHeader": true,
+              "title": "选择导出的列",
+              "combineNum": "",
+              "source": "${items}"
+            },
+            {
+              "type": "divider"
+            },
+            {
+              "type": "plain",
+              "tpl": "银行支付结果Excel导入",
+              "inline": true
+            },
+            {
+              "type": "input-file",
+              "label": "",
+              "name": "file",
+              "id": "u:d776a3d50c31",
+              "mode": "inline",
+              "className": "m-l-lg",
+              "btnLabel": "导入Excel清单",
+              "receiver": "http://localhost:8080/upload",
+              "useChunk": "auto",
+              "chunkSize": 5242880,
+              "startChunkApi": "/api/upload/startChunk",
+              "chunkApi": "/api/upload/chunk",
+              "finishChunkApi": "/api/upload/finishChunk",
+              "accept": "",
+              "fileField": "file",
+              "autoUpload": true,
+              "hideUploadButton": false
+            },
+            {
+              "type": "divider"
+            },
+            {
+              "type": "input-text",
+              "label": "从第几行开始导入",
+              "name": "importStart",
+              "id": "u:1085a7b56228",
+              "mode": "horizontal"
+            },
+            {
+              "type": "input-text",
+              "label": "导入的总列数",
+              "name": "importTotal"
+            },
+            {
+              "type": "input-table",
+              "name": "importConfig",
+              "label": "选择导入的列",
+              "columns": [
+                {
+                  "label": "导入Excel获取的对应列的标题",
+                  "name": "importTitle",
+                  "quickEdit": false,
+                  "type": "input-text",
+                  "placeholder": "-"
+                },
+                {
+                  "label": "从Excel的第几列导入",
+                  "name": "importColumn",
+                  "quickEdit": {
+                    "mode": "popOver"
+                  },
+                  "type": "input-text",
+                  "placeholder": "-"
+                }
+              ],
+              "strictMode": true,
+              "id": "u:6ebe76a79754",
+              "placeholder": "-",
+              "addable": true
+            }
+          ],
+          "api": {
+            "method": "post",
+            "url": "http://localhost:8080/payRule",
+            "data": {
+              "id": "1",
+              "exportTotal": "${exportTotal}",
+              "exportConfigReq": "${exportConfig}",
+              "importStart": "${importStart}",
+              "importTotal": "${importTotal}",
+              "importConfigReq": "${importConfig}"
+            },
+            "responseData": {
+              "id": "${id}",
+              "exportTotal": "${exportTotal}",
+              "exportConfig": "${exportConfigRes}",
+              "importStart": "${importStart}",
+              "importTotal": "${importTotal}",
+              "importConfig": "${importConfigRes}"
+            }
+          },
+          "id": "u:83e4a5a25241",
+          "initApi": {
+            "method": "get",
+            "url": "http://localhost:8080/payRule",
+            "data": null,
+            "responseData": {
+              "id": "${id}",
+              "exportTotal": "${exportTotal}",
+              "exportConfig": "${exportConfigRes}",
+              "importStart": "${importStart}",
+              "importTotal": "${importTotal}",
+              "importConfig": "${importConfigRes}"
+            }
+          },
+          "submitText": "保存",
+          "wrapWithPanel": true,
+          "autoFocus": false,
+          "debug": false,
+          "actions": [
+            {
+              "type": "submit",
+              "label": "保存",
+              "className": ""
+            }
+          ]
+        }
+      ],
+      "messages": {
+      },
+      "style": {
+      },
+      "aside": [
+      ]
+    };
+    let amisScoped = amis.embed('#root', amisJSON);
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>amis demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link rel="stylesheet" href="sdk.css" />
+    <link rel="stylesheet" href="helper.css" />
+    <link rel="stylesheet" href="iconfont.css" />
+    <!-- 这是默认主题所需的，如果是其他主题则不需要 -->
+    <!-- 从 1.1.0 开始 sdk.css 将不支持 IE 11，如果要支持 IE11 请引用这个 css，并把前面那个删了 -->
+    <!-- <link rel="stylesheet" href="sdk-ie11.css" /> -->
+    <!-- 不过 amis 开发团队几乎没测试过 IE 11 下的效果，所以可能有细节功能用不了，如果发现请报 issue -->
+    <style>
+      html,
+      body,
+      .app-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" class="app-wrapper"></div>
+    <script src="sdk.js"></script>
+    <script type="text/javascript">
+      (function () {
+        let amis = amisRequire('amis/embed');
+        // 通过替换下面这个配置来生成不同页面
+        let amisJSON = {
+          "type": "page",
+          "title": "人工审核发票",
+          "body": [
+            {
+              "type": "crud",
+              "syncLocation": false,
+              "api": {
+                "method": "get",
+                "url": "http://localhost:8080/audit/${num}"
+              },
+              "columns": [
+                {
+                  "name": "name",
+                  "label": "开票方",
+                  "type": "text"
+                },
+                {
+                  "name": "type",
+                  "label": "发票类型",
+                  "type": "text"
+                },
+                {
+                  "type": "text",
+                  "label": "发票号",
+                  "name": "num"
+                },
+                {
+                  "type": "text",
+                  "label": "发票金额",
+                  "name": "money"
+                },
+                {
+                  "type": "text",
+                  "label": "签收信息",
+                  "name": "mark"
+                },
+                {
+                  "type": "text",
+                  "label": "对比结果",
+                  "name": "result"
+                },
+                {
+                  "type": "text",
+                  "label": "历史对比",
+                  "name": "history"
+                }
+              ],
+              "bulkActions": [
+              ],
+              "itemActions": [
+              ],
+              "id": "u:49378127aff0",
+              "title": "系统签收记录",
+              "perPageAvailable": [
+                10
+              ],
+              "messages": {
+              },
+              "columnsTogglable": false
+            },
+            {
+              "type": "crud",
+              "syncLocation": false,
+              "api": {
+                "method": "get",
+                "url": ""
+              },
+              "columns": [
+                {
+                  "name": "serial",
+                  "label": "序号",
+                  "type": "text"
+                },
+                {
+                  "name": "",
+                  "label": "发票号码",
+                  "type": "text"
+                },
+                {
+                  "type": "text",
+                  "label": "开票日期"
+                },
+                {
+                  "type": "text",
+                  "label": "销方税号"
+                },
+                {
+                  "type": "text",
+                  "label": "销方名称"
+                },
+                {
+                  "type": "text",
+                  "label": "金额"
+                },
+                {
+                  "type": "text",
+                  "label": "税额"
+                },
+                {
+                  "type": "text",
+                  "label": "可抵扣税额"
+                },
+                {
+                  "type": "text",
+                  "label": "勾选日期"
+                },
+                {
+                  "type": "text",
+                  "label": "发票类型"
+                }
+              ],
+              "bulkActions": [
+              ],
+              "itemActions": [
+              ],
+              "id": "u:c8eb50ef7f14",
+              "inline": true,
+              "title": "税局对应抵扣发票记录",
+              "columnsTogglable": false
+            },
+            {
+              "type": "form",
+              "title": "",
+              "body": [
+                {
+                  "type": "textarea",
+                  "label": "发票签收人说明",
+                  "name": "audit",
+                  "id": "u:20afb82d7689",
+                  "mode": "horizontal"
+                },
+                {
+                  "type": "hidden",
+                  "name": "id",
+                  "id": "u:ada83c62458e"
+                }
+              ],
+              "api": "http://localhost:8080/audit",
+              "mode": "horizontal",
+              "id": "u:46fbbe9a3990",
+              "minRows": 3,
+              "maxRows": 20,
+              "minLength": 5,
+              "maxLength": 120,
+              "submitText": "人工审核通过",
+              "redirect": "check.html"
+            },
+            {
+              "type": "tpl",
+              "tpl": "<p>系统已签收发票汇总金额： ${sum}</p>",
+              "inline": false,
+              "id": "u:17c9d929dcb9",
+              "style": {
+              }
+            },
+            {
+              "type": "tpl",
+              "tpl": "<p>与税局相比多签收金额：</p>",
+              "inline": false,
+              "id": "u:4968f4bc4715",
+              "style": {
+              }
+            },
+            {
+              "type": "button",
+              "label": "返回",
+              "actionType": "url",
+              "dialog": {
+                "title": "系统提示",
+                "body": "对你点击了"
+              },
+              "id": "u:17a3526e9f36",
+              "url": "check.html",
+              "className": "m-l",
+              "blank": false
+            }
+          ]
+        };
+        let amisScoped = amis.embed('#root', amisJSON);
+      })();
+    </script>
+  </body>
+</html>

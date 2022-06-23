@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>amis demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link rel="stylesheet" href="../static/sdk.css" />
+    <link rel="stylesheet" href="../static/helper.css" />
+    <link rel="stylesheet" href="../static/iconfont.css" />
+    <!-- 这是默认主题所需的，如果是其他主题则不需要 -->
+    <!-- 从 1.1.0 开始 sdk.css 将不支持 IE 11，如果要支持 IE11 请引用这个 css，并把前面那个删了 -->
+    <!-- <link rel="stylesheet" href="sdk-ie11.css" /> -->
+    <!-- 不过 amis 开发团队几乎没测试过 IE 11 下的效果，所以可能有细节功能用不了，如果发现请报 issue -->
+    <style>
+      html,
+      body,
+      .app-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" class="app-wrapper"></div>
+    <script src="../static/sdk.js"></script>
+    <script type="text/javascript">
+      (function () {
+        let amis = amisRequire('amis/embed');
+        // 通过替换下面这个配置来生成不同页面
+        let amisJSON = {
+  "type": "page",
+  "title": "供应商发票对账",
+  "body": [
+    {
+      "type": "tabs",
+      "tabs": [
+        {
+          "title": "已签收的供应商发票",
+          "body": [
+            {
+              "type": "input-file",
+              "label": "",
+              "id": "u:e89588180223",
+              "name": "file",
+              "btnLabel": "Excel导入供应商发票签收清单",
+              "receiver": "http://localhost:8080/uploadSupply",
+              "useChunk": "auto",
+              "chunkSize": 5242880,
+              "startChunkApi": "/api/upload/startChunk",
+              "chunkApi": "/api/upload/chunk",
+              "finishChunkApi": "/api/upload/finishChunk",
+              "accept": "",
+              "fileField": "file",
+              "autoUpload": true,
+              "hideUploadButton": false,
+              "mode": "inline"
+            },
+            {
+              "type": "button",
+              "label": "定义Excel导入规则",
+              "level": "success",
+              "actionType": "url",
+              "url": "supply2"
+            },
+            {
+              "type": "crud",
+              "api": {
+                "method": "get",
+                "url": "http://localhost:8080/supply",
+                "trackExpression": "${file}",
+                "autoGenerateFilter": true
+              },
+              "columns": [
+                {
+                  "name": "name",
+                  "label": "开票方",
+                  "type": "text"
+                },
+                {
+                  "name": "type",
+                  "label": "发票类型",
+                  "type": "text"
+                },
+                {
+                  "type": "text",
+                  "label": "发票号",
+                  "name": "num"
+                },
+                {
+                  "type": "text",
+                  "label": "发票金额",
+                  "name": "money"
+                },
+                {
+                  "type": "text",
+                  "label": "签收信息",
+                  "name": "mark"
+                },
+                {
+                  "type": "text",
+                  "label": "对比结果",
+                  "name": "result"
+                },
+                {
+                  "type": "text",
+                  "label": "当前状态",
+                  "name": "status"
+                },
+                {
+                  "type": "text",
+                  "label": "审核记录",
+                  "name": "audit"
+                },
+                {
+                  "type": "text",
+                  "label": "时间",
+                  "name": "date2"
+                },
+                {
+                  "type": "operation",
+                  "label": "操作",
+                  "buttons": [
+                    {
+                      "type": "button-toolbar",
+                      "buttons": [
+                        {
+                          "type": "button",
+                          "label": "备注",
+                          "actionType": "dialog",
+                          "dialog": {
+                            "title": "",
+                            "body": [
+                              {
+                                "type": "form",
+                                "id": "u:d39d8431476c",
+                                "mode": "horizontal",
+                                "title": "表单",
+                                "body": [
+                                  {
+                                    "label": "备注",
+                                    "type": "textarea",
+                                    "name": "mark"
+                                  }
+                                ],
+                                "submitText": "保存",
+                                "api": "http://localhost:8080/mark/$id"
+                              }
+                            ],
+                            "type": "dialog",
+                            "closeOnEsc": false,
+                            "closeOnOutside": false,
+                            "showCloseButton": true
+                          }
+                        },
+                        {
+                          "type": "button",
+                          "label": "审核",
+                          "onEvent": {
+                            "click": {
+                              "actions": [
+                                {
+                                  "actionType": "url",
+                                  "args": {
+                                    "url": "audit",
+                                    "params": {
+                                      "id": "${id}",
+                                      "audit": "${audit}"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ],
+                      "id": "u:f3fcde23052c"
+                    }
+                  ]
+                },
+                {
+                  "type": "hidden",
+                  "name": "id"
+                }
+              ],
+              "bulkActions": [
+              ],
+              "itemActions": [
+              ],
+              "features": [
+              ],
+              "filterColumnCount": 3,
+              "id": "u:87107bf8f551",
+              "syncLocation": false
+            }
+          ]
+        },
+        {
+          "title": "税局抵扣发票列表",
+          "body": [
+            {
+              "type": "input-file",
+              "label": "",
+              "id": "u:f0f72e178de1",
+              "name": "file2",
+              "btnLabel": "Excel导入税局抵扣清单",
+              "receiver": "http://localhost:8080/uploadTax",
+              "useChunk": "auto",
+              "chunkSize": 5242880,
+              "startChunkApi": "/api/upload/startChunk",
+              "chunkApi": "/api/upload/chunk",
+              "finishChunkApi": "/api/upload/finishChunk",
+              "accept": "",
+              "fileField": "file",
+              "autoUpload": true,
+              "hideUploadButton": false,
+              "mode": "inline"
+            },
+            {
+              "type": "button",
+              "label": "定义Excel导入规则",
+              "level": "success",
+              "actionType": "url",
+              "url": "tax2"
+            },
+            {
+              "type": "crud",
+              "syncLocation": false,
+              "api": {
+                "method": "get",
+                "url": "http://localhost:8080/tax",
+                "trackExpression": "${file2}",
+                "autoGenerateFilter": true
+              },
+              "columns": [
+                {
+                  "name": "serial",
+                  "label": "序号",
+                  "type": "text"
+                },
+                {
+                  "name": "num",
+                  "label": "发票号码",
+                  "type": "text"
+                },
+                {
+                  "type": "text",
+                  "label": "开票日期",
+                  "name": "date1"
+                },
+                {
+                  "type": "text",
+                  "label": "销方税号",
+                  "name": "taxNum"
+                },
+                {
+                  "type": "text",
+                  "label": "销方名称",
+                  "name": "name"
+                },
+                {
+                  "type": "text",
+                  "label": "金额",
+                  "name": "money"
+                },
+                {
+                  "type": "text",
+                  "label": "税额",
+                  "name": "tax"
+                },
+                {
+                  "type": "text",
+                  "label": "可抵扣税额",
+                  "name": "credit"
+                },
+                {
+                  "type": "text",
+                  "label": "勾选日期",
+                  "name": "date2"
+                },
+                {
+                  "type": "text",
+                  "label": "发票类型",
+                  "name": "type"
+                },
+                {
+                  "type": "text",
+                  "label": "对比结果",
+                  "name": "result"
+                },
+                {
+                  "type": "text",
+                  "label": "当前状态",
+                  "name": "status"
+                },
+                {
+                  "type": "operation",
+                  "label": "操作",
+                  "buttons": [
+                    {
+                      "type": "button",
+                      "label": "关闭对比",
+                      "actionType": "dialog",
+                      "dialog": {
+                        "title": "系统提示",
+                        "body": "对你点击了"
+                      },
+                      "id": "u:65a24319ffdc",
+                      "placeholder": "-"
+                    }
+                  ]
+                }
+              ],
+              "bulkActions": [
+              ],
+              "itemActions": [
+              ],
+              "id": "u:a606c0753857",
+              "placeholder": "-",
+              "perPageAvailable": [
+                10
+              ],
+              "messages": {
+              }
+            }
+          ]
+        }
+      ],
+      "id": "u:9c6fc88de472"
+    }
+  ]
+};
+        let amisScoped = amis.embed('#root', amisJSON);
+      })();
+    </script>
+  </body>
+</html>
